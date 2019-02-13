@@ -1,7 +1,10 @@
 package com.service;
 
+import net.sf.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Utils {
 
@@ -21,5 +24,10 @@ public class Utils {
         result = Arrays.toString(list.toArray(new Integer[list.size()]));
         System.out.println("listToStr-->result: "+result);
         return result;
+    }
+
+    public static String mapToJson(Map<String,String> dataMap){
+        JSONObject jsonObject = JSONObject.fromObject(dataMap);
+        return jsonObject.toString();
     }
 }

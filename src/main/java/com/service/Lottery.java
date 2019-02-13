@@ -45,6 +45,7 @@ public class Lottery {
 
         String USER = "root";
         String PASS = "it@2019";
+        //String PASS = "root";
 
         try {
             if(conn==null) {
@@ -63,16 +64,27 @@ public class Lottery {
             return this.conn;
     }
 
-    public Boolean getLotterStaus(){
+    public String getPrizeNameBySeq(int prizeSeq, List<Map<String,Object>> prizeList){
+        if(prizeList!=null){
+            for(Map<String,Object> dataMap : prizeList){
+                if(dataMap.get("seq").equals(prizeSeq)){
+                    return String.valueOf(dataMap.get("prize_name"));
+                }
+            }
+        }
+        return "";
+    }
+
+    public int getLotterStaus(){
         String sql = "select value from itid_params where param='lottery_status'";
-        Boolean value = false;
+        int value = 0;
         Connection conn = this.getConnection();
         ResultSet rs = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()){
-                value = rs.getBoolean("value");
+                value = rs.getInt("value");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -91,14 +103,14 @@ public class Lottery {
         return value;
     }
 
-    public void updateLotteryStatus(Boolean status){
+    public void updateLotteryStatus(int prizeSeq){
         String sql = "update itid_params set value=? where param='lottery_status'";
 
         Connection conn = this.getConnection();
         ResultSet rs = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, status?"1":"0");
+            ps.setInt(1, prizeSeq);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -182,6 +194,30 @@ public class Lottery {
             hm.put(key, value);
         }
         return hm;
+    }
+
+    public Boolean hasSign(Integer lotteryNumber){
+        Connection conn = getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "";
+        int count = 0;
+
+        try {
+            sql = "select count(*) from itid_sign where lottery_number=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1,lotteryNumber);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            rsClose(ps, rs);
+        }
+
+        return count>0;
     }
 
 
@@ -312,6 +348,19 @@ public class Lottery {
         try {
             if(stmt!=null){
                 stmt.close();
+            }
+            if(rs!=null){
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void rsClose(PreparedStatement ps, ResultSet rs) {
+        try {
+            if(ps!=null){
+                ps.close();
             }
             if(rs!=null){
                 rs.close();

@@ -5,6 +5,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.service.Utils" %>
+<%@page import="com.service.Lottery" %>
 <%@ page contentType="text/html" pageEncoding="utf-8" %>
         <html lang="en">
 <head>
@@ -13,6 +14,9 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ITID Annual Party Prize List</title>
+    <script src="../js/jquery3.3.1.js" type="text/javascript"></script>
+    <script src="../js/jquery.spin.js" type="text/javascript"></script>
+    <link href="../css/jquery.spin.css" rel="stylesheet" type="text/css" />
 </head>
 
 <style>
@@ -30,6 +34,7 @@
 
     String USER = "root";
     String PASS = "it@2019";
+    //String PASS = "root";
     List<Map<String, Object>> resultList = null;
 
     Connection conn = null;
@@ -57,6 +62,8 @@
         System.out.println("resultList-->"+resultList.size());
 
 
+
+
     }catch(Exception e){
         e.printStackTrace();
 
@@ -72,9 +79,21 @@
             ex.printStackTrace();
         }
     }
+
+    Lottery lottery = new Lottery();
+    int prizeSeq = lottery.getLotterStaus();
+    String prizeName = lottery.getPrizeNameBySeq(prizeSeq,resultList);
+
 %>
 
 <body>
+    <% if(prizeSeq>0){%>
+    <div>
+        <img src="../images/loading2.gif">
+        <span>Now lottery for <%=prizeName%></span>
+    </div>
+    <% }%>
+<div>
     <%
         try {
             for(int i=0; i<resultList.size(); i++){
@@ -118,6 +137,6 @@
             e.printStackTrace();
         }
     %>
-
+</div>
 </body>
 </html>

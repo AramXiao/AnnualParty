@@ -7,6 +7,7 @@
 <head>
     <%
         Lottery lottery = new Lottery();
+        lottery.updateLotteryStatus(0);
     %>
     <meta charset="UTF-8">
     <title>幸运抽奖</title>
@@ -20,7 +21,6 @@
                 loopCount = lotteryCount;
             }
             $('#testtime').html('');
-            console.log('loopCount-->'+loopCount);
             for(var i=0; i<loopCount; i++){
                 if(i%10==0){
                     $('#testtime').append("<section>");
@@ -46,8 +46,23 @@
                 if(timer==null){
                     timer = setInterval(testTime,60);
                 }
+                updateLottery();
             }
             return timer;
+        }
+
+        function updateLottery(){
+            $.ajax({
+                url: "lottery_update.jsp",
+                data: {
+                    prizeSeq: currentPrize.prizeSeq,
+                },
+                dataType: "html",
+                success: function(result){
+                    return;
+                }
+            });
+
         }
 
         function goLottery(){
@@ -117,13 +132,6 @@
         var prize = new Prize();
         var currentPrize = "";
         $(document).ready(function () {
-            <%
-            boolean showWinListFlag = lottery.getLotterStaus();
-            if(showWinListFlag) {
-                response.sendRedirect("winPrizeList.jsp");
-            }
-
-            %>
             currentPrize  = prize.prizeList.pop();
             $('#prizeText').html('<h2>'+currentPrize.prizeName+'</h2>');
             $('#prizeImg').attr("src",currentPrize.image);

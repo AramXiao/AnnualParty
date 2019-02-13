@@ -20,12 +20,21 @@
 <%
     Lottery lottery = new Lottery();
     Integer lotteryNumber = 0;
+
+
+
     if(request.getParameter("lotteryNumber")!=null){
         lotteryNumber = Integer.parseInt(request.getParameter("lotteryNumber"));
     }
     String staffId = "";
     if(request.getParameter("staffId")!=null){
         staffId = request.getParameter("staffId");
+    }
+
+    if(lottery.hasSign(lotteryNumber)){
+        response.sendRedirect("winPrizeList.jsp");
+    }else{
+        response.setHeader("refresh", "5;URL=winPrizeList.jsp");
     }
 
     int result = lottery.sign(lotteryNumber, staffId);
@@ -45,5 +54,6 @@
     <% }else if(result==2){%>
         <h2>Sign successfully!</h2>
     <% }%>
+    <h2>The page will redirect to Prize Page after 5 seconds, if the page hasn't redirected, please click <a href="winPrizeList.jsp">here</a></h2>
 </body>
 </html>

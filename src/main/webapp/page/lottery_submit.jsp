@@ -35,9 +35,7 @@
         }
         result.deleteCharAt(result.lastIndexOf(","));
     }
-    //store in session
-//    winMembersMap.put(prizeSeq, resultList);
-//    session.setAttribute("winMembersMap",winMembersMap);
+    lottery.updateLotteryStatus(0);
 
     System.out.println(result);
     response.getWriter().print(result);
