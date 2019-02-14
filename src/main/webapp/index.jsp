@@ -14,7 +14,7 @@
     <h2>Welcome to ITID Annual Party!</h2>
     <p>Click below link to demo the function</p>
     <ul>
-        <li><a href="<%=contextPath%>/page/sign.jsp?lotteryNumber=2&staffId=43557984">Sign in</a></li>
+        <li><a href="<%=contextPath%>/page/sign.jsp?LotteryNumber=223">Sign in</a></li>
         <li><a href="<%=contextPath%>/page/lottery.jsp">lottery</a></li>
         <li><a href="<%=contextPath%>/page/winPrizeList.jsp">Show win prize list</a></li>
     </ul>

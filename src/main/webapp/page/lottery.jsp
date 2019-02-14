@@ -27,7 +27,6 @@
                 }
                 //$('#testtime').append("<span class='num'>"+Math.floor(Math.random()*lotteryCount)+"</span>&nbsp;&nbsp;&nbsp;");
                 $('#testtime').append("<span class='num'>"+ prize.signList[Math.floor(Math.random()*(lotteryCount))] +"</span>&nbsp;&nbsp;&nbsp;");
-                console.log("index-->"+ Math.floor(Math.random()*(lotteryCount+1)));
                 if(i%10==0){
                     $('#testtime').append("</section>");
                 }
@@ -37,11 +36,8 @@
         function setTime(mark){
 
             if(mark=='stop'){
-                if(timer!=null){
-                    goLottery();
-                }
-                clearInterval(timer);
-                timer = null;
+                goLottery();
+
             }else{
                 if(timer==null){
                     timer = setInterval(testTime,60);
@@ -79,6 +75,8 @@
                     //var result = JSON.stringify(result);
                     var resultstr = result.split(",");
                     if(resultstr.length>0){
+                        clearInterval(timer);
+                        timer=null;
                         $('#testtime').html('');
                         for(var i=0; i<resultstr.length;i++){
                             if(i%10==0){
@@ -96,7 +94,8 @@
         }
 
         function Prize(){
-            this.prizeList = [
+            this.prizeList = <%=lottery.getPrizeListInJson()%>
+            /*this.prizeList = [
                 {
                     prizeSeq: 1,
                     prizeName: '一等奖',
@@ -125,7 +124,7 @@
                     prizeCount: 20,
 
                 },
-            ];
+            ];*/
             this.totalJoiner = 200;
             this.signList =  <%=Utils.listToStr(lottery.getSignNumberList())%>;
         }
@@ -135,6 +134,7 @@
             currentPrize  = prize.prizeList.pop();
             $('#prizeText').html('<h2>'+currentPrize.prizeName+'</h2>');
             $('#prizeImg').attr("src",currentPrize.image);
+
         });
 
 
@@ -143,10 +143,11 @@
             if(prize.prizeList.length>0){
                 currentPrize = prize.prizeList.pop();
             }else{
-                alert('No prize in the pull');
+                alert('No more prize');
             }
             $('#prizeText').html('<h2>'+currentPrize.prizeName+'</h2>');
             $('#prizeImg').attr("src",currentPrize.image);
+            $('#testtime').html("");
         }
 
         function clearTime(timer){ }

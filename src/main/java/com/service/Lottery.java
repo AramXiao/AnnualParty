@@ -41,7 +41,7 @@ public class Lottery {
 
     public Connection getConnection(){
         String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-        String DB_URL = "jdbc:mysql://localhost:3306/mysql?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
+        String DB_URL = "jdbc:mysql://120.79.76.223:3306/mysql?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
 
         String USER = "root";
         String PASS = "it@2019";
@@ -73,6 +73,37 @@ public class Lottery {
             }
         }
         return "";
+    }
+
+    public String hasWinPrize(Integer lotteryNumber){
+        String winPrizeName = "";
+        Connection conn = this.getConnection();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+
+        String sql = "select t1.lottery_number,t2.prize_name from itid_win_prize t1 left join itid_prize t2 on t1.win_prize_id=t2.id where lottery_number=?";
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, lotteryNumber);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                winPrizeName = rs.getString("prize_name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(rs!=null){
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+        return winPrizeName;
     }
 
     public int getLotterStaus(){
@@ -253,7 +284,7 @@ public class Lottery {
             ps = conn.prepareStatement(sql);
             ps.setInt(1,lotteryNumber);
             if(staffId!=null){
-                ps.setString(2,staffId);
+                ps.setString(2, staffId.trim());
             }else{
                 ps.setNull(2,Types.NULL);
             }
@@ -321,6 +352,37 @@ public class Lottery {
         }
 
         return allWinMemberMap;
+    }
+
+    public String getPrizeListInJson(){
+        String jsonData = "";
+        Connection conn = getConnection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<Map<String, String>> resultList = new ArrayList<Map<String,String>>();
+        Map<String, String> mapData = null;
+        String sql = "select id,seq,prize_count,prize_name,prize_image from itid_prize order by seq";
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                mapData = new HashMap<String,String>();
+                mapData.put("id",rs.getString("id"));
+                mapData.put("prizeSeq",rs.getString("seq"));
+                mapData.put("prizeCount",rs.getString("prize_count"));
+                mapData.put("prizeName",rs.getString("prize_name"));
+                mapData.put("image",rs.getString("prize_image"));
+                resultList.add(mapData);
+            }
+            jsonData = Utils.mapListToJson(resultList);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            rsClose(stmt, rs);
+        }
+
+
+        return jsonData;
     }
 
     public List<Integer> getSignNumberList(){
@@ -404,7 +466,7 @@ public class Lottery {
                 innerNum = signNumList.get(i);
                 if(allWinMembersList!=null){
                     if(inNumList(allWinMembersList, innerNum)){
-                        System.out.println("Number: "+innerNum +" has win the prize before, this round will skip it");
+                        //System.out.println("Number: "+innerNum +" has win the prize before, this round will skip it");
                         continue;
                     }
                 }
@@ -423,7 +485,7 @@ public class Lottery {
         int lotteryCount = prizeCount;
         if(prizeCount!=null && prizeCount>0){
             if(prizeCount>numList.size()) {
-                System.out.println("The lottery number list is less than the prizeCount, only draw out the number list count");
+                //System.out.println("The lottery number list is less than the prizeCount, only draw out the number list count");
                 lotteryCount = numList.size();
             }
                 for(int i=0; i<lotteryCount; i++){

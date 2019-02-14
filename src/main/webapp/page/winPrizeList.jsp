@@ -30,12 +30,13 @@
     String sql = "";
 
     String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    String DB_URL = "jdbc:mysql://localhost:3306/mysql?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
+    String DB_URL = "jdbc:mysql://120.79.76.223:3306/mysql?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false";
 
     String USER = "root";
     String PASS = "it@2019";
     //String PASS = "root";
     List<Map<String, Object>> resultList = null;
+    Integer lotteryId = 0;
 
     Connection conn = null;
     Statement stmt = null;
@@ -84,14 +85,22 @@
     int prizeSeq = lottery.getLotterStaus();
     String prizeName = lottery.getPrizeNameBySeq(prizeSeq,resultList);
 
+    String winPrize = lottery.hasWinPrize(lotteryId);
 %>
 
 <body>
-    <% if(prizeSeq>0){%>
-    <div>
-        <img src="../images/loading2.gif">
-        <span>Now lottery for <%=prizeName%></span>
+    <% if(prizeSeq>0){ %>
+    <div style="display: inline">
+        <img src="../images/loading2.gif"><span><h2>Now lottery for <%=prizeName%></h2></span>
     </div>
+    <% }else if(winPrize!=null && winPrize.length()>0){ %>
+    <div>
+        <span><h2>Congratulation! you have win <%=winPrize%></h2></span>
+    </div>
+    <% }else{ %>
+        <div>
+            <span><h2>Sorry, you still not win any prize</h2></span>
+        </div>
     <% }%>
 <div>
     <%

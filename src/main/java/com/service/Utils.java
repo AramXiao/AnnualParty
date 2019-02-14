@@ -1,6 +1,6 @@
 package com.service;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSON;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,8 +26,14 @@ public class Utils {
         return result;
     }
 
-    public static String mapToJson(Map<String,String> dataMap){
-        JSONObject jsonObject = JSONObject.fromObject(dataMap);
-        return jsonObject.toString();
+
+
+    public static String mapListToJson(List<Map<String,String>> resultList){
+       /* JSONArray jsonArray = new JSONArray();
+        for(Map<String,String> map : resultList){
+            jsonArray.add(JSONObject.fromObject(map));
+        }
+        return jsonArray.toString();*/
+       return JSON.toJSONString(resultList);
     }
 }

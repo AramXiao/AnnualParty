@@ -23,37 +23,23 @@
 
 
 
-    if(request.getParameter("lotteryNumber")!=null){
-        lotteryNumber = Integer.parseInt(request.getParameter("lotteryNumber"));
-    }
-    String staffId = "";
-    if(request.getParameter("staffId")!=null){
-        staffId = request.getParameter("staffId");
+    if(request.getParameter("LotteryNumber")!=null){
+        lotteryNumber = Integer.parseInt(request.getParameter("LotteryNumber"));
     }
 
     if(lottery.hasSign(lotteryNumber)){
-        response.sendRedirect("winPrizeList.jsp");
-    }else{
-        response.setHeader("refresh", "5;URL=winPrizeList.jsp");
+        response.sendRedirect("winPrizeList.jsp?LotteryNumber="+lotteryNumber);
     }
 
-    int result = lottery.sign(lotteryNumber, staffId);
 
 %>
 <body>
     <h2>Welcome to ITID Annual party</h2>
-    <%if(staffId!=null && !("").equals(staffId)){%>
-        <h2> Welcome <%=staffId%> !</h2>
-    <% }%>
-    <% if(result==-1){%>
-        <h2>No lottery number found</h2>
-    <%}else if(result==0){%>
-        <h2>Signed fail, please rescan the qrcode to sign again</h2>
-    <%}else if(result==1){%>
-        <h2>You have signed before, no need to sign again</h2>
-    <% }else if(result==2){%>
-        <h2>Sign successfully!</h2>
-    <% }%>
-    <h2>The page will redirect to Prize Page after 5 seconds, if the page hasn't redirected, please click <a href="winPrizeList.jsp">here</a></h2>
+    <form action="sign_submit.jsp" method="post" name="signForm">
+        <input type="hidden" id="LotteryNumber" name="LotteryNumber" value="<%=lotteryNumber%>"  />
+        Please input last 5 number of your staff id: <input id="staffId" name="staffId" value="" length="5" />
+        <input type="submit" name="submitForm" value="Submit"/>
+    </form>
+
 </body>
 </html>
