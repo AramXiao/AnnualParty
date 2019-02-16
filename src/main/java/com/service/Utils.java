@@ -26,14 +26,27 @@ public class Utils {
         return result;
     }
 
+    public static String last5Num(String s){
+        if(s.length()<=5){
+            return s;
+        }
+        return s.substring(s.length()-5);
+    }
+
+    public static Integer toInt(Object o){
+        Integer i = 0;
+
+        try {
+            i = Integer.parseInt(String.valueOf(o));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            i = 0;
+        }
+        return i;
+    }
 
 
     public static String mapListToJson(List<Map<String,String>> resultList){
-       /* JSONArray jsonArray = new JSONArray();
-        for(Map<String,String> map : resultList){
-            jsonArray.add(JSONObject.fromObject(map));
-        }
-        return jsonArray.toString();*/
        return JSON.toJSONString(resultList);
     }
 }

@@ -106,13 +106,16 @@ public class Lottery {
         return winPrizeName;
     }
 
-    public int getLotterStaus(){
-        String sql = "select value from itid_params where param='lottery_status'";
+
+
+    public int getParams(String paramName){
+        String sql = "select value from itid_params where param=?";
         int value = 0;
         Connection conn = this.getConnection();
         ResultSet rs = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,paramName);
             rs = ps.executeQuery();
             while (rs.next()){
                 value = rs.getInt("value");
@@ -129,20 +132,30 @@ public class Lottery {
             }
 
         }
-        System.out.println("value-->"+value);
 
         return value;
     }
 
+
     public void updateLotteryStatus(int prizeSeq){
-        String sql = "update itid_params set value=? where param='lottery_status'";
+        String sql = "update itid_params set value=? where param=?";
 
         Connection conn = this.getConnection();
         ResultSet rs = null;
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, prizeSeq);
+            ps.setString(2, "lottery_status");
             ps.executeUpdate();
+
+
+            if(prizeSeq>0){
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, prizeSeq);
+                ps.setString(2, "last_lottery_prize");
+                ps.executeUpdate();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

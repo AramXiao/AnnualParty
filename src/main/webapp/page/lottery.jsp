@@ -32,12 +32,15 @@
                 }
             }
         }
+
+
         var timer=null;
         function setTime(mark){
 
             if(mark=='stop'){
-                goLottery();
-
+                if(timer!=null){
+                    goLottery();
+                }
             }else{
                 if(timer==null){
                     timer = setInterval(testTime,60);
@@ -95,36 +98,6 @@
 
         function Prize(){
             this.prizeList = <%=lottery.getPrizeListInJson()%>
-            /*this.prizeList = [
-                {
-                    prizeSeq: 1,
-                    prizeName: '一等奖',
-                    image: '../images/iphonex.jpg',
-                    prizeCount: 1,
-
-                },
-                {
-                    prizeSeq: 2,
-                    prizeName: '二等奖',
-                    image: '../images/timg.jpg',
-                    prizeCount: 2,
-
-                },
-                {
-                    prizeSeq: 3,
-                    prizeName: '三等奖',
-                    image: '../images/jbl.jpg',
-                    prizeCount: 10,
-
-                },
-                {
-                    prizeSeq: 4,
-                    prizeName: '四等奖',
-                    image: '../images/marketCard.jpg',
-                    prizeCount: 20,
-
-                },
-            ];*/
             this.totalJoiner = 200;
             this.signList =  <%=Utils.listToStr(lottery.getSignNumberList())%>;
         }

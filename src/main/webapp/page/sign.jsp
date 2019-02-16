@@ -37,7 +37,7 @@
     <h2>Welcome to ITID Annual party</h2>
     <form action="sign_submit.jsp" method="post" name="signForm">
         <input type="hidden" id="LotteryNumber" name="LotteryNumber" value="<%=lotteryNumber%>"  />
-        Please input last 5 number of your staff id: <input id="staffId" name="staffId" value="" length="5" />
+        Please input last 5 number of your staff id to sign in: <input id="staffId" name="staffId" value="" length="5" />
         <input type="submit" name="submitForm" value="Submit"/>
     </form>
 

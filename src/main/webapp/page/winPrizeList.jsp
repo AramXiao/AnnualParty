@@ -24,6 +24,10 @@
         list-style-type: none;
     }
 
+    .inline{
+        white-space:nowrap;
+    }
+
 </style>
 
 <%
@@ -38,7 +42,11 @@
     List<Map<String, Object>> resultList = null;
     Integer lotteryId = 0;
 
-    Connection conn = null;
+    if(request.getParameter("LotteryNumber")!=null){
+        lotteryId = Integer.parseInt(request.getParameter("LotteryNumber"));
+    }
+
+   Connection conn = null;
     Statement stmt = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -60,8 +68,6 @@
             resultList.add(dataMap);
         }
 
-        System.out.println("resultList-->"+resultList.size());
-
 
 
 
@@ -82,7 +88,8 @@
     }
 
     Lottery lottery = new Lottery();
-    int prizeSeq = lottery.getLotterStaus();
+    int prizeSeq = lottery.getParams("lottery_status");
+    int lastPrize = lottery.getParams("last_lottery_prize");
     String prizeName = lottery.getPrizeNameBySeq(prizeSeq,resultList);
 
     String winPrize = lottery.hasWinPrize(lotteryId);
@@ -90,14 +97,14 @@
 
 <body>
     <% if(prizeSeq>0){ %>
-    <div style="display: inline">
-        <img src="../images/loading2.gif"><span><h2>Now lottery for <%=prizeName%></h2></span>
+    <div class="inline">
+        <img src="../images/loading2.gif"><span style="color: red; font-family: Calibri; font-size: 1.5em; font-weight: bold">Now lottery for <%=prizeName%></span>
     </div>
     <% }else if(winPrize!=null && winPrize.length()>0){ %>
     <div>
         <span><h2>Congratulation! you have win <%=winPrize%></h2></span>
     </div>
-    <% }else{ %>
+    <% }else if(lastPrize>0){ %>
         <div>
             <span><h2>Sorry, you still not win any prize</h2></span>
         </div>
@@ -111,14 +118,16 @@
         <ul>
             <li>奖品: <%=recordMap.get("prize_name")%></li>
             <li>奖品数量: <%=recordMap.get("prize_count")%></li>
-            <li><img src="<%=recordMap.get("prize_image")%>" width="400px"></li>
+            <% if(lastPrize>0 && Utils.toInt(recordMap.get("seq"))>=lastPrize){ %>
+                <li><img src="<%=recordMap.get("prize_image")%>" width="400px"></li>
+            <% }%>
             <li>
                 <table width="500px" border="1px">
                     <thead>
                         <th>中奖号码</th>
-                        <th>员工编号</th>
-                        <th>部门</th>
-                        <th>团队</th>
+                        <th>后五位员工编号</th>
+                        <%--<th>部门</th>--%>
+                        <%--<th>团队</th>--%>
                     </thead>
                     <%
                         sql = "SELECT t1.lottery_number,t1.win_prize_id,t1.win_date,t2.staff_id,t2.dept,t2.team,t2.sign_date from itid_win_prize t1 left join itid_sign t2 on t1.lottery_number=t2.lottery_number where win_prize_id=?";
@@ -129,9 +138,9 @@
                     %>
                     <tr>
                         <td><%=Utils.toHtml(rs.getInt("lottery_number"))%></td>
-                        <td><%=Utils.toHtml(rs.getString("staff_id"))%></td>
-                        <td><%=Utils.toHtml(rs.getString("dept"))%></td>
-                        <td><%=Utils.toHtml(rs.getString("team"))%></td>
+                        <td><%=Utils.last5Num(Utils.toHtml(rs.getString("staff_id")))%></td>
+                        <%--<td><%=Utils.toHtml(rs.getString("dept"))%></td>--%>
+                        <%--<td><%=Utils.toHtml(rs.getString("team"))%></td>--%>
                     </tr>
                     <%
                         }
