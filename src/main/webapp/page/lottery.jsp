@@ -119,7 +119,11 @@
                 alert('No more prize');
             }
             $('#prizeText').html('<h2>'+currentPrize.prizeName+'</h2>');
-            $('#prizeImg').attr("src",currentPrize.image);
+            if(currentPrize.image!=''){
+                $('#prizeImg').attr("src",currentPrize.image);
+            }else{
+                $('#prizeImg').attr("src",'../images/present.jpg');
+            }
             $('#testtime').html("");
         }
 

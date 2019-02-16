@@ -28,6 +28,11 @@
         white-space:nowrap;
     }
 
+    body{
+        max-width: 500px;
+        margin: 20px auto ;
+    }
+
 </style>
 
 <%
@@ -119,13 +124,13 @@
             <li>奖品: <%=recordMap.get("prize_name")%></li>
             <li>奖品数量: <%=recordMap.get("prize_count")%></li>
             <% if(lastPrize>0 && Utils.toInt(recordMap.get("seq"))>=lastPrize){ %>
-                <li><img src="<%=recordMap.get("prize_image")%>" width="400px"></li>
+                <li><img src="<%=recordMap.get("prize_image")%>" width="100%"></li>
             <% }%>
             <li>
-                <table width="500px" border="1px">
+                <table width="100%" border="1px">
                     <thead>
                         <th>中奖号码</th>
-                        <th>后五位员工编号</th>
+                        <th>员工编号后五位</th>
                         <%--<th>部门</th>--%>
                         <%--<th>团队</th>--%>
                     </thead>
