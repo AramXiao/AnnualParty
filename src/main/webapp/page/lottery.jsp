@@ -10,7 +10,7 @@
         lottery.updateLotteryStatus(0);
     %>
     <meta charset="UTF-8">
-    <title>幸运抽奖</title>
+    <title>Welcome to ITID Annual Party</title>
     <script src="../js/jquery3.3.1.js"></script>
     <script type="text/javascript">
         function testTime(){
@@ -110,6 +110,26 @@
 
         });
 
+        function disableSignUp(signFlag){
+            $.ajax({
+                url: "updateSign_submit.jsp",
+                data: {
+                    signFlag: signFlag,
+                },
+                dataType: "html",
+                success: function(result){
+                    return ;
+                }
+            });
+            if(signFlag==1){
+                $('#stopSignBtn').show();
+                $('#signBtn').hide();
+            }else{
+                $('#stopSignBtn').hide();
+                $('#signBtn').show();
+            }
+        }
+
 
 
         function switchPrize(){
@@ -155,6 +175,8 @@
 </div>
 <h1>汇丰ITID2018年会抽奖</h1>
 <div style="margin-bottom: 20px;">
+    <button id="signBtn" onclick="disableSignUp(1);" value="" style="width:100px;height:30px;display: none;">开启签到</button>
+    <button id="stopSignBtn" onclick="disableSignUp(0);" value="" style="width:100px;height:30px">截止签到</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button onclick="switchPrize();" value="" style="width:100px;height:30px">切换奖品</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button onClick="setTime();" value="" style="width:100px;height:30px">开始</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     
     <button onClick="setTime('stop');" value="Stop" style="width:100px;height:30px">停止</button>

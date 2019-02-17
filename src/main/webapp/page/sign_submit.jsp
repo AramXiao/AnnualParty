@@ -29,7 +29,11 @@
 
     Lottery lottery = new Lottery();
     int result = lottery.sign(lotteryNumber, staffId);
-    response.setHeader("refresh", "5;URL=winPrizeList.jsp");
+    if(result==3){
+        response.setHeader("refresh", "5;URL=sign.jsp?LotteryNumber="+lotteryNumber);
+    }else{
+        response.setHeader("refresh", "5;URL=winPrizeList.jsp?LotteryNumber="+lotteryNumber);
+    }
 %>
 
 
@@ -42,7 +46,12 @@
 <h2>You have signed before, no need to sign again</h2>
 <% }else if(result==2){%>
 <h2>Sign successfully!</h2>
+<% }else if(result==3){%>
+<h2>The staff id has been signed up before,please check your input and sign again!</h2>
 <% }%>
+<% if (result==3 || result==0){%>
+<h2>The page will redirect to Sign Page, if the page hasn't redirected, please click <a href="sign.jsp?LotteryNumber=<%=lotteryNumber%>">here</a></h2>
+<% }else{%>
 <h2>The page will redirect to Prize Page after 5 seconds, if the page hasn't redirected, please click <a href="winPrizeList.jsp?LotteryNumber=<%=lotteryNumber%>">here</a></h2>
-
+<% }%>
 </html>

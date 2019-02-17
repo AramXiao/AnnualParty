@@ -136,6 +136,24 @@ public class Lottery {
         return value;
     }
 
+    public void updateParam(String paramName, String value){
+        String sql = "update itid_params set value=? where param=?";
+        Connection conn = this.getConnection();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, value);
+            ps.setString(2, paramName);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+           rsClose(ps,rs,conn);
+        }
+    }
+
 
     public void updateLotteryStatus(int prizeSeq){
         String sql = "update itid_params set value=? where param=?";
@@ -175,10 +193,11 @@ public class Lottery {
         if(prizeId==null || winList==null){
             return;
         }
+        PreparedStatement ps = null;
+        Connection conn = this.getConnection();
         try {
             String sql = "DELETE FROM itid_win_prize WHERE win_prize_id=?";
-            PreparedStatement ps = null;
-            Connection conn = this.getConnection();
+
 
             ps = conn.prepareStatement(sql);
             ps.setInt(1, prizeId);
@@ -201,6 +220,8 @@ public class Lottery {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            rsClose(ps,null,conn);
         }
 
 
@@ -221,7 +242,7 @@ public class Lottery {
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            rsClose(stmt, rs);
+            rsClose(stmt, rs, conn);
         }
 
         return id;
@@ -258,7 +279,7 @@ public class Lottery {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            rsClose(ps, rs);
+            rsClose(ps, rs, conn);
         }
 
         return count>0;
@@ -268,7 +289,7 @@ public class Lottery {
     /**
      *
      * @param lotteryNumber
-     * @return -1: no lottery number 0: update fail, 1: signed before, 2: update successfully
+     * @return -1: no lottery number 0: update fail, 1: signed before, 2: update successfully,3: ID already sign by other people
      */
     public int sign(Integer lotteryNumber, String staffId){
         Connection conn = getConnection();
@@ -277,6 +298,7 @@ public class Lottery {
         int result = 0;
         String sql = "";
         Map<String, String> dataMap = new HashMap<String, String>();
+        int sign_flag = 0;
 
         if(lotteryNumber<=0){
             return -1;
@@ -289,6 +311,22 @@ public class Lottery {
             rs = ps.executeQuery();
             if(rs.next()){
                 return 1;
+            }
+
+            sql = "select * from itid_sign where staff_id=? order by sign_date desc";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1,staffId);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                return 3;
+            }
+
+            sql = "select value from itid_params where param=?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "sign_flag");
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                sign_flag = rs.getInt(1);
             }
 
 
@@ -304,7 +342,7 @@ public class Lottery {
             ps.setNull(3,Types.NULL);
             ps.setNull(4,Types.NULL);
             ps.setTimestamp(5,new Timestamp(new Date().getTime()));
-            ps.setInt(6,1);
+            ps.setInt(6,sign_flag==1?1:0);
             ps.executeUpdate();
             result = 2;
 
@@ -312,7 +350,7 @@ public class Lottery {
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            rsClose(ps, rs);
+            rsClose(ps, rs, conn);
         }
 
         return result;
@@ -361,7 +399,7 @@ public class Lottery {
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            rsClose(stmt, rs);
+            rsClose(stmt, rs, conn);
         }
 
         return allWinMemberMap;
@@ -391,7 +429,7 @@ public class Lottery {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            rsClose(stmt, rs);
+            rsClose(stmt, rs, conn);
         }
 
 
@@ -414,12 +452,12 @@ public class Lottery {
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            rsClose(stmt, rs);
+            rsClose(stmt, rs, conn);
         }
         return signList;
     }
 
-    private void rsClose(Statement stmt, ResultSet rs) {
+    private void rsClose(Statement stmt, ResultSet rs, Connection con) {
         try {
             if(stmt!=null){
                 stmt.close();
@@ -427,12 +465,15 @@ public class Lottery {
             if(rs!=null){
                 rs.close();
             }
+//            if(con!=null){
+//                con.close();
+//            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void rsClose(PreparedStatement ps, ResultSet rs) {
+    private void rsClose(PreparedStatement ps, ResultSet rs, Connection con) {
         try {
             if(ps!=null){
                 ps.close();
@@ -440,6 +481,9 @@ public class Lottery {
             if(rs!=null){
                 rs.close();
             }
+//            if(con!=null){
+//                con.close();
+//            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
