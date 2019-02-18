@@ -9,7 +9,7 @@ insert into itid_params(param, value) values('lottery_status','0');
 insert into itid_params(param, value) values('last_lottery_prize',0);
 #sign up flag default set to 1
 insert into itid_params(param, value) values('sign_flag', 1);
-
+insert into itid_params(param,value) values('party_start_flag',0);
 
 # for add hot
 insert into itid_prize(seq,prize_count,prize_name,prize_image)values(6,1,'特别奖','../images/present.jpg');

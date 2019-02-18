@@ -10,7 +10,7 @@
         lottery.updateLotteryStatus(0);
     %>
     <meta charset="UTF-8">
-    <title>Welcome to ITID Annual Party</title>
+    <title>Welcome to 2018 ITID China Annual Party</title>
     <script src="../js/jquery3.3.1.js"></script>
     <script type="text/javascript">
         function testTime(){
@@ -97,46 +97,40 @@
         }
 
         function Prize(){
-            this.prizeList = <%=lottery.getPrizeListInJson()%>
+            this.checkPrizeList = <%=lottery.getPrizeListInJson()%>;
+            this.prizeList = <%=lottery.getPrizeListInJson()%>;
             this.totalJoiner = 200;
             this.signList =  <%=Utils.listToStr(lottery.getSignNumberList())%>;
         }
         var prize = new Prize();
         var currentPrize = "";
         $(document).ready(function () {
+            for(var i=0; i<prize.prizeList.length; i++){
+                $('#switchPrizeDD').append("<option value='"+prize.prizeList[i].id+"'>"+prize.prizeList[i].prizeName);
+            }
             currentPrize  = prize.prizeList.pop();
             $('#prizeText').html('<h2>'+currentPrize.prizeName+'</h2>');
             $('#prizeImg').attr("src",currentPrize.image);
 
         });
 
-        function disableSignUp(signFlag){
-            $.ajax({
-                url: "updateSign_submit.jsp",
-                data: {
-                    signFlag: signFlag,
-                },
-                dataType: "html",
-                success: function(result){
-                    return ;
+
+        function switchPrize(prizeId){
+            if(prizeId!=null){
+                for(var i=0; i<prize.checkPrizeList.length; i++){
+                    if(prize.checkPrizeList[i].id==prizeId){
+                        currentPrize = prize.checkPrizeList[i];
+                        console.log(1);
+                        break;
+                    }
+
                 }
-            });
-            if(signFlag==1){
-                $('#stopSignBtn').show();
-                $('#signBtn').hide();
             }else{
-                $('#stopSignBtn').hide();
-                $('#signBtn').show();
-            }
-        }
-
-
-
-        function switchPrize(){
-            if(prize.prizeList.length>0){
-                currentPrize = prize.prizeList.pop();
-            }else{
-                alert('No more prize');
+                if(prize.prizeList.length>0){
+                    currentPrize = prize.prizeList.pop();
+                }else{
+                    alert('No more prize');
+                }
             }
             $('#prizeText').html('<h2>'+currentPrize.prizeName+'</h2>');
             if(currentPrize.image!=''){
@@ -173,11 +167,12 @@
 <div style="position:absolute; left: 85%;">
     <img src="../images/hsbc.jpg" width="200px" />
 </div>
-<h1>汇丰ITID2018年会抽奖</h1>
+<h1>2018 ITID China Annual Party Luck Draw</h1>
 <div style="margin-bottom: 20px;">
-    <button id="signBtn" onclick="disableSignUp(1);" value="" style="width:100px;height:30px;display: none;">开启签到</button>
-    <button id="stopSignBtn" onclick="disableSignUp(0);" value="" style="width:100px;height:30px">截止签到</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button onclick="switchPrize();" value="" style="width:100px;height:30px">切换奖品</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select id="switchPrizeDD" onchange="switchPrize(this.value)">
+        <option value="">Please select</option>
+    </select>
     <button onClick="setTime();" value="" style="width:100px;height:30px">开始</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     
     <button onClick="setTime('stop');" value="Stop" style="width:100px;height:30px">停止</button>
 </div>

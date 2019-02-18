@@ -13,7 +13,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>ITID Annual Party Prize List</title>
+    <title>Welcome to 2018 ITID China Annual Party</title>
     <script src="../js/jquery3.3.1.js" type="text/javascript"></script>
     <script src="../js/jquery.spin.js" type="text/javascript"></script>
     <link href="../css/jquery.spin.css" rel="stylesheet" type="text/css" />
@@ -58,7 +58,7 @@
     try {
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        sql = "select id,seq,prize_count,prize_name,prize_image from itid_prize order by seq asc";
+        sql = "select id,seq,prize_count,prize_name,prize_image from itid_prize order by seq desc";
         stmt = conn.prepareStatement(sql);
 
         rs = stmt.executeQuery(sql);

@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Welcome to ITID Annual Party</title>
+    <title>Welcome to 2018 ITID China Annual Party</title>
     <script>
         function confirmMsg(){
             var inputId = document.getElementById('staffId').value;
@@ -17,6 +17,7 @@
         }
 
     </script>
+
 </head>
 
 <style>
@@ -27,13 +28,14 @@
 
 </style>
 
-
-
 <%
     Lottery lottery = new Lottery();
     Integer lotteryNumber = 0;
 
-
+    int flag = lottery.getParams("party_start_flag");
+    if(flag==0){
+        response.sendRedirect("welcome.jsp");
+    }
 
     if(request.getParameter("LotteryNumber")!=null){
         lotteryNumber = Integer.parseInt(request.getParameter("LotteryNumber"));
@@ -49,7 +51,7 @@
     <h2>Welcome to ITID Annual party</h2>
     <form action="sign_submit.jsp" method="post" name="signForm">
         <input type="hidden" id="LotteryNumber" name="LotteryNumber" value="<%=lotteryNumber%>"  />
-        Please input last 5 number of your staff id to sign in: <input id="staffId" name="staffId" value="" length="5" />
+        Please input last 5 digits of your staff id to sign in: <input id="staffId" name="staffId" value="" length="5" />
         <input type="button" name="submitForm" value="Submit" onclick="confirmMsg();"/>
     </form>
 
