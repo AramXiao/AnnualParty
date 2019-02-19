@@ -81,6 +81,7 @@
                         clearInterval(timer);
                         timer=null;
                         $('#testtime').html('');
+                        $('#congratulationTips').show();
                         for(var i=0; i<resultstr.length;i++){
                             if(i%10==0){
                                 $('#testtime').append("<section>");
@@ -106,10 +107,10 @@
         var currentPrize = "";
         $(document).ready(function () {
             for(var i=0; i<prize.prizeList.length; i++){
-                $('#switchPrizeDD').append("<option value='"+prize.prizeList[i].id+"'>"+prize.prizeList[i].prizeName);
+                $('#switchPrizeDD').append("<option value='"+prize.prizeList[i].id+"'>"+prize.prizeList[i].prizeName + " - " + prize.prizeList[i].prizeDesc);
             }
             currentPrize  = prize.prizeList.pop();
-            $('#prizeText').html('<h2>'+currentPrize.prizeName+'</h2>');
+            $('#prizeText').html('<h2>'+currentPrize.prizeDesc+'</h2>');
             $('#prizeImg').attr("src",currentPrize.image);
 
         });
@@ -132,8 +133,8 @@
                     alert('No more prize');
                 }
             }
-            $('#prizeText').html('<h2>'+currentPrize.prizeName+'</h2>');
-            if(currentPrize.image!=''){
+            $('#prizeText').html('<h2>'+currentPrize.prizeDesc+'</h2>');
+            if(currentPrize.image!='' && typeof (currentPrize.image)!='undefined'){
                 $('#prizeImg').attr("src",currentPrize.image);
             }else{
                 $('#prizeImg').attr("src",'../images/present.jpg');
@@ -184,8 +185,8 @@
     </div>
 </div>
     <div style="position:relative; width: 840px;">
-        <p style="padding-top: 100px;"><b>恭喜以下中奖号码：</b></p>
-        <div id="testtime" class="box3" style="font-size:30px;white-space: nowrap; text-align: left; display: table;padding-left: 50px;" ></div>
+        <p id="congratulationTips" style="padding-top: 100px; font-weight: bold; font-size: 30px;color:red; display: none;">恭喜以下中奖号码：</p>
+        <div id="testtime" class="box3" style="font-size:30px;white-space: nowrap; text-align: left; display: table;padding-left: 50px; color:red;" ></div>
     </div>
 </div>
 </html>

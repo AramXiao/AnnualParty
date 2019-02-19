@@ -412,7 +412,7 @@ public class Lottery {
         ResultSet rs = null;
         List<Map<String, String>> resultList = new ArrayList<Map<String,String>>();
         Map<String, String> mapData = null;
-        String sql = "select id,seq,prize_count,prize_name,prize_image from itid_prize order by seq";
+        String sql = "select id,seq,prize_count,prize_name,prize_image,prize_desc from itid_prize order by seq";
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -423,6 +423,7 @@ public class Lottery {
                 mapData.put("prizeCount",rs.getString("prize_count"));
                 mapData.put("prizeName",rs.getString("prize_name"));
                 mapData.put("image",rs.getString("prize_image"));
+                mapData.put("prizeDesc", rs.getString("prize_desc"));
                 resultList.add(mapData);
             }
             jsonData = Utils.mapListToJson(resultList);
@@ -502,32 +503,45 @@ public class Lottery {
 
 
         if(winMembersMap!=null){
-            Iterator iter = winMembersMap.keySet().iterator();
-            while (iter.hasNext()){
-                Integer key = (Integer)iter.next();
-                if(key.equals(prizeId)){ //skip the existing win members of this round
-                    continue;
+            if(prizeSeq!=4){
+                Iterator iter = winMembersMap.keySet().iterator();
+                while (iter.hasNext()){
+                    Integer key = (Integer)iter.next();
+                    if(key.equals(prizeId)){ //skip the existing win members of this round
+                        continue;
+                    }
+                    List<Integer> winList = winMembersMap.get(key);
+                    if(winList!=null){
+                        allWinMembersList.addAll(winList);
+                    }
                 }
-                List<Integer> winList = winMembersMap.get(key);
-                if(winList!=null){
+            }else{
+                Iterator iter = winMembersMap.keySet().iterator();
+                while (iter.hasNext()) {
+                    Integer key = (Integer)iter.next();
+                    List<Integer> winList = winMembersMap.get(key);
                     allWinMembersList.addAll(winList);
                 }
             }
         }
 
         List<Integer> signNumList = getSignNumberList();
-        if(numList==null){
+        {
             numList = new ArrayList<Integer>();
             int innerNum = 0;
-            for (int i=0; i<signNumList.size(); i++){
-                innerNum = signNumList.get(i);
-                if(allWinMembersList!=null){
-                    if(inNumList(allWinMembersList, innerNum)){
-                        //System.out.println("Number: "+innerNum +" has win the prize before, this round will skip it");
-                        continue;
+            if(prizeSeq!=4){ // lottery the player, no need to filter the winner
+                for (int i=0; i<signNumList.size(); i++){
+                    innerNum = signNumList.get(i);
+                    if(allWinMembersList!=null){
+                        if(inNumList(allWinMembersList, innerNum)){
+                            //System.out.println("Number: "+innerNum +" has win the prize before, this round will skip it");
+                            continue;
+                        }
                     }
+                    numList.add(innerNum);
                 }
-                numList.add(innerNum);
+            }else{
+                numList.addAll(signNumList);
             }
             //ramdom the list
             Collections.shuffle(numList);
@@ -554,8 +568,9 @@ public class Lottery {
         }
         Collections.sort(winNumberList);
 
-
-        this.saveWinResult(prizeId, winNumberList);
+        if(prizeSeq!=4){
+            this.saveWinResult(prizeId, winNumberList);
+        }
 
         return winNumberList;
 

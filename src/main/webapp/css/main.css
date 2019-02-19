@@ -1,0 +1,80 @@
+html, body {
+	height:100%; 
+	margin:0;
+	background-image: url(../img/mb_background.jpg);
+	background-position: center;
+	background-size: auto 100%;
+	background-repeat: repeat-y;
+	background-color: black;
+	background-attachment:fixed;
+}
+
+.CenterBlock{
+	width: 100%;
+	text-align: center;
+}
+
+#MainTitle #MainTitleImg {
+	max-width: 917px;
+	width: 78%;
+}
+
+#ALTitle #ALTitleImg {
+	max-width: 914px;
+	width: 84%;
+}
+
+.line {
+	width: 100%;
+	height: 4vh;
+}
+
+#IDinput #staffId, #Button input, #subtitle #insertNumber, #map img{
+	max-width: 755px;
+	width: 70%;
+	color: white;
+	text-align: center;
+	border-style: none;
+}
+
+#IDinput #staffId {
+	height: 6vh;
+	font-size: 4vh;
+	letter-spacing: 3vw;
+	background: url(../img/textbox_bg.png);
+	background-position:left center;
+	background-repeat: no-repeat;
+	background-size: auto 100%;
+	border-radius: 10px;
+}
+
+#Button input {
+	height: 6vh;
+	background: url(../img/checkinbut-bg.gif);
+	background-position: bottom;
+	font-size: 4vh;
+	text-shadow: -2px -1px 1px gray;
+	background-size: auto 100%;
+	border-radius: 10px;
+}
+
+#map img{
+	border-radius: 10px;
+}
+
+#contentBox #contentBody{
+	max-width: 1080px;
+	margin-left: 15%;
+	margin-right: 15%;
+	text-align: left;
+	border-style: none;
+	color: white;
+	text-shadow: 2px 1px 1px black;
+	font-size: 4vw;
+	font-family:Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	line-height: 7vw;
+	font-weight:bold;
+}
+
+.contentLineTitle{
+}

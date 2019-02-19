@@ -119,6 +119,7 @@
         try {
             for(int i=0; i<resultList.size(); i++){
                 Map<String, Object> recordMap = resultList.get(i);
+                if(Utils.toInt(recordMap.get("seq"))!=4){
         %>
         <ul>
             <li>奖品: <%=recordMap.get("prize_name")%></li>
@@ -155,6 +156,7 @@
             </li>
         </ul>
         <%
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
